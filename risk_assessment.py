@@ -1,3 +1,8 @@
+import csv
+from datetime import datetime
+
+risk_register = []
+
 def assess_risk(asset, likelihood, impact):
     score = likelihood * impact
 
@@ -19,6 +24,15 @@ def assess_risk(asset, likelihood, impact):
     print(f"Risk Score: {score}/25")
     print(f"Risk Level: {level}")
     print(f"Recommendation: {recommendation}")
+    risk_register.append({
+        "Asset": asset,
+        "Likelihood": likelihood,
+        "Impact": impact,
+        "Risk Score": score,
+        "Risk Level": level,
+        "Recommendation": recommendation,
+        "Date": datetime.now().strftime("%Y-%m-%d")
+    })
 
 
 print("Welcome to Cyber Risk Assessment Tool")
@@ -38,3 +52,14 @@ while True:
         print("Please enter valid whole numbers.")
 
 assess_risk(asset, likelihood, impact)
+
+with open("risk_register.csv", "w", newline="") as file:
+    writer = csv.DictWriter(file, fieldnames=[
+        "Asset", "Likelihood", "Impact",
+        "Risk Score", "Risk Level",
+        "Recommendation", "Date"
+    ])
+    writer.writeheader()
+    writer.writerows(risk_register)
+
+print("Risk register saved successfully!")
